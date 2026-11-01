@@ -1,0 +1,50 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SSHS Admin</title><meta name="robots" content="noindex, nofollow">
+<style>
+:root{--navy:#101C2C;--y:#F5B51B;--steel:#89929D}*{box-sizing:border-box}
+body{margin:0;font:400 15px/1.55 Manrope,system-ui,sans-serif;background:#F7F7F4;color:#15191F}
+header{background:var(--navy);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header b{letter-spacing:.08em}header b span{color:var(--y)}
+main{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:24px;padding:24px;max-width:1200px;margin:auto}
+fieldset{background:#fff;border:1px solid #dcdcd6;margin:0 0 16px;padding:16px 20px;display:grid;gap:12px}legend{font-weight:800;padding:0 6px}
+label{font-weight:700;font-size:13px;display:block;margin-bottom:4px}input,textarea{width:100%;font:inherit;padding:10px;border:1.5px solid #8a929b;min-height:42px}
+.err{color:#b3261e;font-size:12px;font-weight:700}[aria-invalid=true]{border-color:#b3261e}
+button,a.b{font:inherit;font-weight:700;padding:10px 16px;border:2px solid var(--y);background:#fff;cursor:pointer;text-decoration:none;color:var(--navy);display:inline-block}
+button.p{background:var(--y)}.bar{display:flex;gap:10px;flex-wrap:wrap;position:sticky;bottom:0;background:#F7F7F4;padding:12px 0}
+:focus-visible{outline:3px solid var(--y);outline-offset:2px}
+.pv{background:var(--navy);color:#fff;padding:24px;position:sticky;top:12px;align-self:start}.pv h2{font-size:22px;line-height:1.15;margin:0 0 8px}.pv p{color:#cfd5db;margin:0 0 12px}
+.pv .c{border-top:1px solid #ffffff33;padding-top:10px;margin-top:10px}.pv h3{margin:0;color:var(--y);font-size:15px}.note{font-size:13px;color:#44505e}#st{font-weight:700}
+@media(max-width:860px){main{grid-template-columns:1fr;padding:16px}.pv{position:static}}
+</style></head><body>
+<header><b>SSHS <span>ADMIN</span></b><span id="st" role="status">Editing</span></header>
+<main><form id="f" novalidate>
+<p class="note">Edit the site text and contact details below. Changes are saved as a draft in this browser. Download <code>content.json</code> and upload it to your site to publish.</p>
+<fieldset><legend>Hero</legend><div><label for="heroHeadline">Headline</label><input id="heroHeadline"></div><div><label for="heroLead">Supporting text</label><textarea id="heroLead" rows="3"></textarea></div></fieldset>
+<fieldset><legend>Contact details</legend><div><label for="person">Contact person</label><input id="person"></div><div><label for="phone">Phone (display)</label><input id="phone" type="tel"></div><div><label for="whatsapp">WhatsApp number (digits with country code)</label><input id="whatsapp" inputmode="numeric"></div><div><label for="email">Email</label><input id="email" type="email"></div></fieldset>
+<fieldset><legend>Equipment 1</legend><div><label for="equip1Name">Model name</label><input id="equip1Name"></div><div><label for="equip1Desc">Description</label><textarea id="equip1Desc" rows="3"></textarea></div></fieldset>
+<fieldset><legend>Equipment 2</legend><div><label for="equip2Name">Model name</label><input id="equip2Name"></div><div><label for="equip2Desc">Description</label><textarea id="equip2Desc" rows="3"></textarea></div></fieldset>
+<div class="bar"><button class="p" type="submit">Download content.json</button><button type="button" id="save">Save draft</button><a class="b" id="prev" href="index.html?preview=1" target="_blank" rel="noopener">Preview on site</a><button type="button" id="imp">Import JSON</button><button type="button" id="rst">Reset</button><input type="file" id="file" accept="application/json" hidden></div>
+<p class="note">This panel has no login. Do not rely on it for security: protect the <code>admin.html</code> page with your host's password protection or access rules.</p>
+</form>
+<aside class="pv" aria-label="Live preview"><h2 id="pH"></h2><p id="pL"></p><div class="c"><h3 id="p1"></h3><span id="p1d"></span></div><div class="c"><h3 id="p2"></h3><span id="p2d"></span></div><div class="c"><span id="pC"></span></div></aside></main>
+<script>
+var DEF={"heroHeadline": "The Right Reach for Long-Term Infrastructure Projects.", "heroLead": "Shree Shyam Hiring Service provides boom lift hiring for infrastructure projects across India, with an operator provided and a minimum hiring period of two years.", "person": "Naresh Kumar Sharma", "phone": "+91 9324694699", "whatsapp": "919324694699", "email": "shreeshyamhiringservice@gmail.com", "equip1Name": "JLG 1200 SXJ / SJP", "equip1Desc": "Enquire about this listed JLG boom lift for your infrastructure project. Contact SSHS to confirm the exact model, availability, and hiring quotation.", "equip2Name": "JLG 800 AJ", "equip2Desc": "Discuss your infrastructure project's equipment requirements with SSHS and enquire about availability and long-term hiring terms."},K=Object.keys(DEF),$=function(i){return document.getElementById(i)},st=$('st');
+function load(d){K.forEach(function(k){$(k).value=d[k]!=null?d[k]:DEF[k]});show()}
+function get(){var o={};K.forEach(function(k){o[k]=$(k).value.trim()});return o}
+function show(){var c=get();$('pH').textContent=c.heroHeadline;$('pL').textContent=c.heroLead;$('p1').textContent=c.equip1Name;$('p1d').textContent=c.equip1Desc;$('p2').textContent=c.equip2Name;$('p2d').textContent=c.equip2Desc;$('pC').textContent=c.person+' \u00b7 '+c.phone+' \u00b7 '+c.email}
+function saveDraft(){try{localStorage.setItem('sshs-draft',JSON.stringify(get()));st.textContent='Draft saved in this browser'}catch(e){st.textContent='Could not save draft (storage unavailable)'}}
+function valid(){var ok=true;document.querySelectorAll('.err').forEach(function(e){e.remove()});
+ K.forEach(function(k){var el=$(k);el.removeAttribute('aria-invalid');var v=el.value.trim(),m='';
+  if(!v)m='Required.';else if(k==='whatsapp'&&!/^\d{10,15}$/.test(v.replace(/\D/g,'')))m='Enter 10-15 digits including country code.';else if(k==='email'&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v))m='Enter a valid email.';
+  if(m){ok=false;el.setAttribute('aria-invalid','true');var s=document.createElement('div');s.className='err';s.textContent=m;el.parentNode.appendChild(s)}});
+ if(!ok){st.textContent='Fix the highlighted fields';document.querySelector('[aria-invalid]').focus()}return ok}
+document.getElementById("f").addEventListener('input',show);
+document.getElementById("f").addEventListener('submit',function(e){e.preventDefault();if(!valid())return;saveDraft();var b=new Blob([JSON.stringify(get(),null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='content.json';a.click();st.textContent='Downloaded content.json. Upload it next to index.html to publish.'});
+$('save').onclick=function(){if(valid())saveDraft()};
+$('rst').onclick=function(){if(confirm('Reset all fields to the original text?')){try{localStorage.removeItem('sshs-draft')}catch(e){}load(DEF);st.textContent='Reset'}};
+$('prev').onclick=function(){if(valid())saveDraft();else return false};
+$('imp').onclick=function(){$('file').click()};
+$('file').onchange=function(){var r=new FileReader();r.onload=function(){try{load(JSON.parse(r.result));st.textContent='Imported'}catch(e){st.textContent='Invalid JSON file'}};if(this.files[0])r.readAsText(this.files[0])};
+var d={};try{d=JSON.parse(localStorage.getItem('sshs-draft')||'{}')}catch(e){}
+load(d);
+</script></body></html>
